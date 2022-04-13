@@ -121,13 +121,16 @@ bool validPDec(str pDec){
         result = false;
     }
 
+    bool isCouple = false;
     if (result & rls.length()!=0){
         str tempStr=rls;
         str tempTempStr="";
         
+        
         enter
-        out(tempStr) enter
+        
         OUT("Enter Checkpoint")
+        OUT(tempStr) 
         while (true){
             for (int i=0;i!=tempStr.length()-1;i++){
                 if (tempStr[i]==l & tempStr[i+1]==r){
@@ -139,11 +142,20 @@ bool validPDec(str pDec){
                             tempTempStr+=tempStr[c];
 
                     }
-                    
+
                     tempStr=tempTempStr;
                     tempTempStr="";
+                    isCouple=true;
                     break;
+                    
                 }
+            }
+
+            if (isCouple==false){
+                out(tempStr)out(" Not a Couple ")OUT(tempStr.length())
+                break;
+            }else{
+                isCouple=false;
             }
 
             OUT(tempStr);
@@ -151,12 +163,13 @@ bool validPDec(str pDec){
                 break;
             }
         }
-        OUT("Exist Checkpoint")
+
+        OUT("Exit Checkpoint")
         OUT(tempStr); 
         enter  
 
 
-        if (tempStr[0]==r & tempStr[1]==l)
+        if ((tempStr[0]==r & tempStr[1]==l) | isCouple==false)
             return false;
     
     }
@@ -186,10 +199,10 @@ int main(){
         }
 
         if (validPDec(command)){
-            out(command) space out("Declaration is valid.") enter
+            out(command) space out("Parenthesis Declaration is valid.") enter
 
         }else{
-            out(command) space out("Declaration is not valid.") enter
+            out(command) space out("Parenthesis Declaration is not valid.") enter
 
         }
 
