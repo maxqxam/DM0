@@ -33,8 +33,8 @@ str binToHex4based(str bin){
     int valueTable[4] = {8,4,2,1};
     int c = 3;
     for (int i=bin.length()-1;i!=-1;i--){
-        if (bin[i]=='1'){            
-            hexVal += valueTable[c];            
+        if (bin[i]=='1'){
+            hexVal += valueTable[c];
         }
         if (c==0){
             c=4;
@@ -42,16 +42,16 @@ str binToHex4based(str bin){
             if (hex.length()==2)
                 hex=decToHex16(hex);
             Hex = hex + Hex;
-            hexVal = 0;            
+            hexVal = 0;
         }
-        c--;   
+        c--;
     }
 
     return Hex;
 }
 str input(str placeholder){
     str mString;
-    bool notEmpty = false;    
+    bool notEmpty = false;
     while (1){
         mString="";
         out(placeholder)
@@ -63,7 +63,7 @@ str input(str placeholder){
             for (int i=0;i!=mString.length();i++){
                 if (mString[i]!=' ')
                     notEmpty = true;
-            };   
+            };
 
             if (notEmpty)
                 break;
@@ -76,13 +76,97 @@ str input(str placeholder){
 bool isBin(str String){
     for (int i=0 ; i!=String.length() ;i++)
         if (String[i]!='0' & String[i]!='1')
-            return false; 
+            return false;
 
     return true;
 }
 
-int main(){
+bool validPDec(str pDec){
+    char l,r;
+    l='(';r=')';
+    str rls = "";
+    int rc,lc;
+
+    rc = lc = 0;
+    int rlc = 0;
+
+    for (int i=0;i!=pDec.length();i++){
+        if (pDec[i]==l | pDec[i]==r){
+            rls+=pDec[i];
+            rlc++;
+            if (pDec[i]==l){
+                lc++;
+            }else{
+                rc++;
+            }
+        }
+    }
     
+    bool result = true;
+
+    if (rls[0]==r){
+        OUT("1- ')' is at the begining of the expression.")
+        result = false;
+    }
+    if (rlc%2!=0){
+        OUT("2- The total number of Parenthesis is an odd number.")
+        result = false;
+    }
+    if (rls[rlc-1]==l){
+        OUT("3- '(' is at the ending of the expression.")
+        result = false;
+    }
+    if (rc!=lc){
+        OUT("4- The number of left and right parenthesis is not equal.)")
+        result = false;
+    }
+
+    if (result & rls.length()!=0){
+        str tempStr=rls;
+        str tempTempStr="";
+        
+        enter
+        out(tempStr) enter
+        OUT("Enter Checkpoint")
+        while (true){
+            for (int i=0;i!=tempStr.length()-1;i++){
+                if (tempStr[i]==l & tempStr[i+1]==r){
+                    tempStr[i]=' ';
+                    tempStr[i+1]=' ';
+
+                    for (int c=0;c!=tempStr.length();c++){
+                        if (tempStr[c]!=' ')
+                            tempTempStr+=tempStr[c];
+
+                    }
+                    
+                    tempStr=tempTempStr;
+                    tempTempStr="";
+                    break;
+                }
+            }
+
+            OUT(tempStr);
+            if (tempStr.length()<3){
+                break;
+            }
+        }
+        OUT("Exist Checkpoint")
+        OUT(tempStr); 
+        enter  
+
+
+        if (tempStr[0]==r & tempStr[1]==l)
+            return false;
+    
+    }
+    
+
+
+    return true;
+}
+int main(){
+
     str command;
     str messages[] = {"Enter command : ",
                         "Enter Bin Number : "};
@@ -92,36 +176,25 @@ int main(){
 
 
     while (true){
-        command = input(messages[messageIndex]);    
-        if (messageIndex==0){
-            if (command=="s"){
-                messageIndex=1;
-            }else if(command=="q"){
-                break;
-            }
-        }else{
-            if (command=="b"){
-                messageIndex=0;
-            }else if(command=="q"){
-                break;
-            }else{
-                ifBin=isBin(command);
-                if (ifBin)
-                    std::cout<<command<<" is a binary number \n";                
-                if (ifBin & command.length()%4!=0){
-                    out(command)
-                    OUT(" Is not devidable by 4 therefore it's not valid")
-                }else{           
-                    hex = binToHex4based(command);
-                    out("The hex value of ")out(command) space
-                    out("is") space OUT(hex)
-                }
-            };
+
+        enter
+        command = input("Input a parenthesis declaration : ");
+        enter enter enter enter enter enter enter enter enter enter
+
+        if (command=="q"){
+            break;
         }
+
+        if (validPDec(command)){
+            out(command) space out("Declaration is valid.") enter
+
+        }else{
+            out(command) space out("Declaration is not valid.") enter
+
+        }
+
+
     }
-
-
-    
 
     return 0;
 }
