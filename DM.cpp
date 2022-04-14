@@ -8,6 +8,22 @@
 #define enter std::cout<<"\n";
 
 
+
+
+//char And,Or,XAnd,Then, Not, Hashtag;
+char OpAll[]="&|%>~#=";
+char OpSome[]="&|%>=";
+
+char Alphabet[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";   
+// Why in string form it can handle one less characters?
+
+    
+char And='&';char Or='|';char XAnd='%';char Then='>';
+char Not='~';char Hashtag='#';// Why can't I declare them seperately outside the main function?
+
+
+
+
 str decToHex16(str dex16){
     str out = dex16;
     if (out=="10"){
@@ -105,20 +121,24 @@ bool validPDec(str pDec){
     bool result = true;
 
     if (rls[0]==r){
-        OUT("1- ')' is at the begining of the expression.")
+        //OUT("1- ')' is at the begining of the expression.")
         result = false;
     }
     if (rlc%2!=0){
-        OUT("2- The total number of Parenthesis is an odd number.")
+        //OUT("2- The total number of Parenthesis is an odd number.")
         result = false;
     }
     if (rls[rlc-1]==l){
-        OUT("3- '(' is at the ending of the expression.")
+        //OUT("3- '(' is at the ending of the expression.")
         result = false;
     }
     if (rc!=lc){
-        OUT("4- The number of left and right parenthesis is not equal.)")
+        //OUT("4- The number of left and right parenthesis is not equal.)")
         result = false;
+    }
+
+    if (!result){
+        return result;
     }
 
     bool isCouple = false;
@@ -126,11 +146,15 @@ bool validPDec(str pDec){
         str tempStr=rls;
         str tempTempStr="";
         
+        if (tempStr.length()==2){
+            if (tempStr[0]==l & tempStr[1]==r)
+                return true;
+        }
         
-        enter
+        //enter
         
-        OUT("Enter Checkpoint")
-        OUT(tempStr) 
+        //OUT("Enter Checkpoint")
+        //OUT(tempStr) 
         while (true){
             for (int i=0;i!=tempStr.length()-1;i++){
                 if (tempStr[i]==l & tempStr[i+1]==r){
@@ -152,34 +176,138 @@ bool validPDec(str pDec){
             }
 
             if (isCouple==false){
-                out(tempStr)out(" Not a Couple ")OUT(tempStr.length())
+                //out(tempStr)out(" Not a Couple ")OUT(tempStr.length())
                 break;
             }else{
                 isCouple=false;
             }
 
-            OUT(tempStr);
+            //out(tempStr) OUT(tempStr.length())
             if (tempStr.length()<3){
                 break;
             }
         }
 
-        OUT("Exit Checkpoint")
-        OUT(tempStr); 
-        enter  
+        //OUT("Exit Checkpoint")
+        //OUT(tempStr); 
+        //enter  
 
-
-        if ((tempStr[0]==r & tempStr[1]==l) | isCouple==false)
+        if (tempStr.length()!=2 & isCouple==false)
+            return false;
+        if ((tempStr[0]==r & tempStr[1]==l) & tempStr.length()==2)
             return false;
     
     }
-    
-
 
     return true;
 }
-int main(){
 
+bool inCharList(char Char,const char List[],int ListSize){
+
+    for (int i=0;i!=ListSize-1
+            ; i++){
+            
+            if (Char==List[i]){
+                return true;
+            }
+    }
+    return false;
+}
+
+int ifAround(char before[],int currentIndex,
+                char after[], str Struct)
+
+    {
+        if (currentIndex==0){
+            if (inCharList(Struct[currentIndex+1],after,
+                            sizeof(after)/sizeof(after[0]))){
+                
+                return 2;
+            }
+        }else if(currentIndex==Struct.length()-1){
+            if (inCharList(Struct[currentIndex-1],before,
+                            sizeof(before)/sizeof(before[0]))){
+                return 1;
+            }
+
+        }else{
+            int ifBoth=0;
+            if (inCharList(Struct[currentIndex+1],after,
+                            sizeof(after)/sizeof(after[0]))){
+                
+                ifBoth += 2;                
+            }
+            if (inCharList(Struct[currentIndex-1],before,
+                            sizeof(before)/sizeof(before[0]))){
+                ifBoth += 1;            
+            }
+            return ifBoth;
+        }                  
+}
+
+
+bool validStruct(str Struct){
+
+    int letCount=0;
+    int schCount=0;
+    
+    for (int i=0;i!=Struct.length();i++){
+
+        if (inCharList(Struct[i],Alphabet,sizeof(Alphabet)/sizeof(Alphabet[0]))){
+            letCount++;
+        }else if (inCharList(Struct[i],OpAll,sizeof(OpAll)/sizeof(OpAll[0]))){
+            schCount++;
+        }
+        
+
+
+
+
+        if (ifAround(OpSome,i,OpSome,Struct)!=0 & inCharList(Struct[i],OpSome,
+            sizeof(OpSome)/sizeof(OpSome[0]))){
+            return false;
+        }
+
+        if (ifAround("(",i," ",Struct)!=0 & inCharList(Struct[i],OpSome,
+            sizeof(OpSome)/sizeof(OpSome[0]))){
+            enter
+            out(i) space out(Struct) out(ifAround("(",i,")",Struct))
+            enter
+            return false;
+        }
+
+        if (ifAround("~",i,"~",Struct)!=0 & inCharList(Struct[i],"~",
+        sizeof("~")/sizeof('~'))){
+            return false;
+        }
+
+        if (ifAround("~",i,"-",Struct)==1 & inCharList(Struct[i],OpSome,
+            sizeof(OpSome)/sizeof(OpSome[0]))){
+            return false;
+        }
+        
+    }
+
+    Alphabet;
+    
+    return true;
+}
+
+void shrinkChar(char Char,str &String){
+    str result;
+
+    for (int i=0;i!=String.length();i++){
+        if (String[i]!=Char){
+            result+=String[i];
+        }
+    }
+
+    String = result;
+}
+
+
+int main(){
+    
     str command;
     str messages[] = {"Enter command : ",
                         "Enter Bin Number : "};
@@ -190,9 +318,10 @@ int main(){
 
     while (true){
 
-        enter
+        enter 
         command = input("Input a parenthesis declaration : ");
-        enter enter enter enter enter enter enter enter enter enter
+        shrinkChar(' ',command);
+        enter enter enter   
 
         if (command=="q"){
             break;
@@ -200,6 +329,20 @@ int main(){
 
         if (validPDec(command)){
             out(command) space out("Parenthesis Declaration is valid.") enter
+
+
+            out(command) space out("Has a") 
+            if (validStruct(command)){
+                out(" valid structer")
+
+            }else{
+                out("n invalid sructer")
+
+            }
+
+            enter
+
+            
 
         }else{
             out(command) space out("Parenthesis Declaration is not valid.") enter
