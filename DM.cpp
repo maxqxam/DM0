@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <cstring>
 
 #define str std::string
 #define OUT(x) std::cout<<x<<'\n';
@@ -201,10 +202,12 @@ bool validPDec(str pDec){
 
     return true;
 }
+    
+bool inCharList(char Char,const char List[]){
 
-bool inCharList(char Char,const char List[],int ListSize){
+    int ListSize=strlen(List);
 
-    for (int i=0;i!=ListSize-1
+    for (int i=0;i!=ListSize
             ; i++){
             
             if (Char==List[i]){
@@ -219,30 +222,29 @@ int ifAround(char before[],int currentIndex,
 
     {
         if (currentIndex==0){
-            if (inCharList(Struct[currentIndex+1],after,
-                            sizeof(after)/sizeof(after[0]))){
+            if (inCharList(Struct[currentIndex+1],after)){
                 
                 return 2;
             }
         }else if(currentIndex==Struct.length()-1){
-            if (inCharList(Struct[currentIndex-1],before,
-                            sizeof(before)/sizeof(before[0]))){
+            if (inCharList(Struct[currentIndex-1],before)){
                 return 1;
             }
 
         }else{
             int ifBoth=0;
-            if (inCharList(Struct[currentIndex+1],after,
-                            sizeof(after)/sizeof(after[0]))){
+            if (inCharList(Struct[currentIndex+1],after)){
                 
                 ifBoth += 2;                
             }
-            if (inCharList(Struct[currentIndex-1],before,
-                            sizeof(before)/sizeof(before[0]))){
+            if (inCharList(Struct[currentIndex-1],before)){
                 ifBoth += 1;            
             }
             return ifBoth;
-        }                  
+        }      
+
+
+    return 0;            
 }
 
 
@@ -250,45 +252,58 @@ bool validStruct(str Struct){
 
     int letCount=0;
     int schCount=0;
+    int arCode=0;
+    char None[] = "-";
+    char othSome[] = "~#";
+    char lp[] = "(";
+    char rp[] = ")";
+    char bp[] = "()";
     
     for (int i=0;i!=Struct.length();i++){
 
-        if (inCharList(Struct[i],Alphabet,sizeof(Alphabet)/sizeof(Alphabet[0]))){
+        if (inCharList(Struct[i],Alphabet)){
             letCount++;
-        }else if (inCharList(Struct[i],OpAll,sizeof(OpAll)/sizeof(OpAll[0]))){
+        }else if (inCharList(Struct[i],OpAll)){
             schCount++;
         }
         
-
-
-
-
-        if (ifAround(OpSome,i,OpSome,Struct)!=0 & inCharList(Struct[i],OpSome,
-            sizeof(OpSome)/sizeof(OpSome[0]))){
-            return false;
-        }
-
-        if (ifAround("(",i," ",Struct)!=0 & inCharList(Struct[i],OpSome,
-            sizeof(OpSome)/sizeof(OpSome[0]))){
-            enter
-            out(i) space out(Struct) out(ifAround("(",i,")",Struct))
-            enter
-            return false;
-        }
-
-        if (ifAround("~",i,"~",Struct)!=0 & inCharList(Struct[i],"~",
-        sizeof("~")/sizeof('~'))){
-            return false;
-        }
-
-        if (ifAround("~",i,"-",Struct)==1 & inCharList(Struct[i],OpSome,
-            sizeof(OpSome)/sizeof(OpSome[0]))){
-            return false;
-        }
         
-    }
+        if (inCharList(Struct[i],Alphabet)){
+           
+        }else if (inCharList(Struct[i],OpSome)){
+            if (ifAround(OpSome,i,OpSome,Struct)!=0){
+                return false;
+            }
+            if (ifAround(lp,i,rp,Struct)!=0){
+                return false;
+            }
 
-    Alphabet;
+
+        }else if (inCharList(Struct[i],othSome)){
+            if (ifAround(othSome,i,othSome,Struct)!=0){
+                return false;
+            }else if(Struct[i]=='#'){
+                if (ifAround(None,i,Alphabet,Struct)==0){
+                    return false;
+                }
+            }
+                
+        }else if (inCharList(Struct[i],")")){
+            if (ifAround(None,i,othSome,Struct)!=0){
+                return false;
+            }
+            
+        }else{
+
+           
+        }
+
+        
+
+    }
+    
+
+    
     
     return true;
 }
@@ -307,7 +322,7 @@ void shrinkChar(char Char,str &String){
 
 
 int main(){
-    
+    enter enter enter enter enter enter enter 
     str command;
     str messages[] = {"Enter command : ",
                         "Enter Bin Number : "};
@@ -315,6 +330,10 @@ int main(){
     bool ifBin;
     str hex;
 
+    str X = "(p>q)%((p|r)|(q&r))=r";
+
+    
+    
 
     while (true){
 
