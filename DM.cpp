@@ -8,7 +8,7 @@
 #define out(x) std::cout<<x;
 #define space std::cout<<" ";
 #define enter std::cout<<"\n";
-
+#define indent std::cout<<"    ";
 
 
 
@@ -263,6 +263,15 @@ void clearArray(T &array,int arraySize){
         array[i]=*empty;
     }
 }
+template <typename T>
+void printArray(T &array,char splitter){
+    int size = sizeof(array)/sizeof(array[0]);
+
+    for (int i=0;i!=size;i++){
+        out(array[i]) out(splitter)
+
+    }
+}
 
 
 str varStore[8];
@@ -460,6 +469,156 @@ void shrinkChar(char Char,str &String){
     String = result;
 }
 
+bool validCell(str cell){
+
+    int OpSomeCount=0;
+
+    for (int i=0;i!=cell.length();i++){
+        if (inCharList(cell[i],OpSome)) OpSomeCount++;
+
+    }
+
+    if (OpSomeCount>1){
+        return false;
+    }
+
+
+
+    return true;
+}
+enum Operations{
+    AND,OR,THEN,XTHEN
+
+
+
+};
+
+char solveBit(char Bit0,char Bit1, int Operation){
+    char Bit2;
+    
+    if (Operation==AND){
+        if (Bit0=='1' & Bit1=='1'){
+            Bit2='1';
+        }else{
+            Bit2='0';
+        }
+
+    }else if(Operation==OR){
+        if (Bit0=='1' | Bit1=='1'){
+            Bit2='1';
+        }else{
+            Bit2='0';
+        }
+
+    }else if(Operation==THEN){
+        if (Bit0=='1' & Bit1=='0'){
+            Bit2='0';
+        }else{
+            Bit2='1';
+        }
+
+
+    }else if(Operation==XTHEN){
+        if ((Bit0=='1' & Bit1=='1') | (Bit0=='0' & Bit1=='0')){
+            Bit2='1';
+        }else{
+            Bit2='0';
+        }
+    }
+
+    return Bit2;
+}
+
+str solveOperation(str Bin0,str Bin1,int Operation){
+    str Bin2;
+
+    for (int i=0;i!=Bin0.length();i++){
+
+        Bin2+=solveBit(Bin0[i],Bin1[i],Operation);
+
+    }    
+
+    return Bin2;
+}
+str solveCell(str cell){
+    str hexCell;
+
+
+    
+
+    return hexCell;
+}
+bool solveProblem(str problem){
+
+    str cell;
+    str hexCell;
+    char lp='(';
+    char rp=')';
+
+    bool opened = false;
+    int cellRange[2] = {0,0};
+
+    enter
+    OUT("Cells:")
+    for (int i=0;i!=problem.length();i++){
+        
+        if (opened){
+            if (problem[i]==lp){
+                cellRange[0]=i;
+
+            }else if(problem[i]==rp){
+                
+                cellRange[1]=i;
+                
+                for (int c=cellRange[0]+1;c!=cellRange[1];c++){
+                    cell+=problem[c];               
+                }
+
+                indent out(problem) indent
+                out(cell) indent
+                //printArray(cellRange,' ');
+
+                if (validCell(cell)){
+                    hexCell = solveCell(cell);
+                    OUT(hexCell);
+                }
+                else{
+                    OUT("Invalid cell structer")
+                    break;
+                }
+
+                space enter
+
+                cell="";
+                opened = false;
+
+            }
+
+        }else{
+            if (problem[i]==lp){
+                cellRange[0]=i;
+                opened = true;
+
+            }else if(problem[i]==rp){
+
+
+            }
+
+
+        }
+
+
+    }
+
+
+
+
+
+
+
+
+    return true;
+}
 
 int main(){
     enter enter enter enter enter enter enter
@@ -471,7 +630,7 @@ int main(){
     str hex;
 
     str X = "(p>q)%((p|r)|(q&r))=r";
-
+    str finalResult;
     //str varStore[8];
 
 
@@ -497,18 +656,25 @@ int main(){
                 out("This statement contain's ")
                 int varsCount=getVars(command);
                 out(varsCount);
+                
                 out(" variables.")
-                enter
+                
 
                 getVarVals(varsCount);
-
+                enter enter
+                OUT("Variables:")
                 for (int i=0;i!=varsCount;i++){
-                    out(varStore[i]) space
+
+                    indent out(varStore[i]) space
+                    if (varsCount<4){
+                        out(varValStore[i]) space
+                    }
+
                     out(binToHex4based(varValStore[i])) enter
 
                 }
 
-
+                solveProblem(command);
 
             }else{
                 out("n invalid sructer.")
