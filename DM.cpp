@@ -11,12 +11,11 @@
 #define indent std::cout<<"    ";
 
 
-
 //char And,Or,XAnd,Then, Not, Hashtag;
 char OpAll[]="&|%>~#=";
 char OpSome[]="&|%>=";
 
-char Alphabet[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+char Alphabet[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 // Why in string form it can handle one less characters?
 
 
@@ -276,63 +275,71 @@ void printArray(T &array,char splitter){
 
 str varStore[8];
 str varValStore[8];
+char hexCharList[] = "0123456789abcdef";
+
 int getVars(str Struct){
     int maxIndex=7;
     int result=0;
-    ;
+
     clearArray(varStore,8);
     str tempVar="";
     bool open=false;
-
+    bool hexOpen=false;
     for (int i=0;i!=Struct.length();i++){
-        
-        if (open){
-            if (inCharList(Struct[i],Alphabet)==false){
-                open=false;
-                
-                if(inStrList(tempVar,varStore,maxIndex+1)==0){
+        if (Struct[i]=='#'){            
+            hexOpen=true;
 
-                    varStore[result]=tempVar;           
-                    result++;
-                }
-                
-                tempVar="";
-            }else{
-                tempVar+=Struct[i];
-                if (i==Struct.length()-1){
-                    varStore[result]=tempVar;
-                    result++;
-                }
+        }
+        else if (hexOpen){
+            if (inCharList(Struct[i],hexCharList)==false){
+                hexOpen=false;
             }
-            
+
         }else{
-            
-            if (inCharList(Struct[i],Alphabet)){
-                open=true;
-                
-                tempVar+=Struct[i];
+            if (open){
+                if (inCharList(Struct[i],Alphabet)==false){
+                    open=false;
 
-                if (i==Struct.length()-1 & i==0){
-                    varStore[result]=tempVar;
-                    result++;
+                    if(inStrList(tempVar,varStore,maxIndex+1)==0){
 
-                }else
-                if (i==Struct.length()-1){
-                    varStore[result]=tempVar;
-                    result++;
+                        varStore[result]=tempVar;
+                        result++;
+                    }
 
+                    tempVar="";
+                }else{
+                    tempVar+=Struct[i];
+                    if (i==Struct.length()-1){
+                        varStore[result]=tempVar;
+                        result++;
+                    }
                 }
-                
 
+            }else{
+
+                if (inCharList(Struct[i],Alphabet)){
+                    open=true;
+
+                    tempVar+=Struct[i];
+
+                    if (i==Struct.length()-1 & i==0){
+                        varStore[result]=tempVar;
+                        result++;
+
+                    }else
+                    if (i==Struct.length()-1){
+                        varStore[result]=tempVar;
+                        result++;
+
+                    }
+                }
             }
         }
-        
-    }
 
-    //enter 
-    //for (int i=0;i!=8;i++){
-    //    out(i) space OUT(varStore[i])   
-    //}
+
+    }
+    
+
     return result;
 }
 
@@ -368,23 +375,25 @@ void getVarVals(int varsCount){
     //OUT("Enter Loop")
     //
     for (int i=0;i!=varsCount;i++){
-        packSize=pow(2,i+1);   
+        packSize=pow(2,i+1);
         Bin=getBinStruct(packSize,staSize);
         varValStore[i]=Bin;
         //Hex=binToHex4based(Bin);
 
-       
-        //out(i) space out(varStore[i]) space out(packSize) space      
-        //out(Hex) space        
-        //if (staSize<16) out(Bin)     
+
+        //out(i) space out(varStore[i]) space out(packSize) space
+        //out(Hex) space
+        //if (staSize<16) out(Bin)
         //enter
 
     }
-    
+
     //OUT("Exit Loop")
 
 
 }
+
+
 bool validStruct(str Struct){
 
     int letCount=0;
@@ -426,7 +435,7 @@ bool validStruct(str Struct){
                 return false;
 
             }else if(Struct[i]=='#'){
-                if (ifAround(None,i,Alphabet,Struct)==0){
+                if (ifAround(None,i,hexCharList,Struct)==0){
                     return false;
 
                 }
@@ -438,7 +447,7 @@ bool validStruct(str Struct){
             }
             if (ifAround(othSome,i,None,Struct)!=0){
                 return false;
-            }           
+            }
 
         }else if (inCharList(Struct[i],"(")){
             if (ifAround(rp,i,None,Struct)!=0){
@@ -487,7 +496,7 @@ bool validCell(str cell){
     return true;
 }
 enum Operations{
-    AND,OR,THEN,XTHEN
+    AND,OR,THEN,XTHEN,EQUALS
 
 
 
@@ -495,7 +504,7 @@ enum Operations{
 
 char solveBit(char Bit0,char Bit1, int Operation){
     char Bit2;
-    
+
     if (Operation==AND){
         if (Bit0=='1' & Bit1=='1'){
             Bit2='1';
@@ -536,17 +545,145 @@ str solveOperation(str Bin0,str Bin1,int Operation){
 
         Bin2+=solveBit(Bin0[i],Bin1[i],Operation);
 
-    }    
+    }
 
     return Bin2;
 }
+
+int varsCount;
+
+str varToBin(str Var){
+    str result;
+
+    for (int i=0;i!=varsCount;i++){
+        if (Var==varStore[i]){
+            result = varValStore[i];
+        }
+
+    }
+
+    return result;
+}
+
+
+
+str hexToBin(str Hex){
+    str result;
+
+
+    str binList[16] = {
+        "0000" , "0001" , "0010" , "0011",
+        "0100" , "0101" , "0110" , "0111",
+        "1000" , "1001" , "1010" , "1011",
+        "1100" , "1101" , "1110" , "1111"
+    };
+
+    for (int i=0;i!=Hex.length();i++){
+        int c;
+        for (c=0;c!=16;c++){
+            if (Hex[i]==hexCharList[c]) break;
+
+        }
+
+        result+=binList[c];
+
+    }
+
+    return result;
+}
+
 str solveCell(str cell){
-    str hexCell;
+
+    str result;
+
+    bool openVar = false;
+    bool openHex = false;
+
+    str Bins[2];
+
+    int binIndex=0;
+
+    str var;
+    str hex;
+    int binCounter=0;
+    char OperationChar;
+
+    for (int i=0;i!=cell.length();i++){
+        if (inCharList(cell[i],OpSome)==true){
+            OperationChar=cell[i];
+        
+        }
+        if (openHex==false){
+            if (cell[i]=='#'){
+                openHex=true;
+
+            }
+
+        }else{
+            if(inCharList(cell[i],hexCharList)==true){
+                hex+=cell[i];
+                if (i==cell.length()-1){
+                    Bins[binCounter] = hexToBin(hex);
+
+                }
+
+            }else if(inCharList(cell[i],hexCharList)==false){               
+                Bins[binCounter] = hexToBin(hex);
+                binCounter++;
+                hex = "";
+                openHex=false;
+            }
+        }
 
 
+        if (openHex==false){
+            if (openVar==true){
+
+                if (inCharList(cell[i],Alphabet)==false){
+
+                    Bins[binCounter]=varToBin(var);
+                    binCounter++;
+                    var="";
+                    openVar=false;
+
+                }else{
+                    var+=cell[i];
+                    if (i==cell.length()-1){
+                        Bins[binCounter]=varToBin(var);
+                        var="";
+                    }
+                }
+
+            }else{
+
+                if (inCharList(cell[i],Alphabet)==true){
+                    openVar=true;
+                    var+=cell[i];
+                    if (i==cell.length()-1){
+                        Bins[binCounter]=varToBin(var);
+                        var="";
+                    }                    
+
+                }
+                
+            }
+
+        }
+
+    }
+    int OperationInt;
+
+    if (OperationChar=='>') OperationInt=THEN;
+    if (OperationChar=='%') OperationInt=XTHEN;
+    if (OperationChar=='&') OperationInt=AND;
+    if (OperationChar=='|') OperationInt=OR;
+    if (OperationChar=='=') OperationInt=EQUALS;
+
+    result = solveOperation(Bins[0],Bins[1],OperationInt);
     
 
-    return hexCell;
+
+    return binToHex4based(result);
 }
 bool solveProblem(str problem){
 
@@ -560,18 +697,19 @@ bool solveProblem(str problem){
 
     enter
     OUT("Cells:")
+    
     for (int i=0;i!=problem.length();i++){
-        
+
         if (opened){
             if (problem[i]==lp){
                 cellRange[0]=i;
 
             }else if(problem[i]==rp){
-                
+
                 cellRange[1]=i;
-                
+
                 for (int c=cellRange[0]+1;c!=cellRange[1];c++){
-                    cell+=problem[c];               
+                    cell+=problem[c];
                 }
 
                 indent out(problem) indent
@@ -610,13 +748,6 @@ bool solveProblem(str problem){
 
     }
 
-
-
-
-
-
-
-
     return true;
 }
 
@@ -631,8 +762,8 @@ int main(){
 
     str X = "(p>q)%((p|r)|(q&r))=r";
     str finalResult;
-    //str varStore[8];
 
+    
 
     while (true){
 
@@ -654,11 +785,11 @@ int main(){
                 out(" valid structer.")
                 enter
                 out("This statement contain's ")
-                int varsCount=getVars(command);
+                varsCount=getVars(command);
                 out(varsCount);
-                
+
                 out(" variables.")
-                
+
 
                 getVarVals(varsCount);
                 enter enter
