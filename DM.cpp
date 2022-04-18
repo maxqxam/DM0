@@ -14,6 +14,7 @@
 //char And,Or,XAnd,Then, Not, Hashtag;
 char OpAll[]="&|%>~#=";
 char OpSome[]="&|%>=";
+char PS[]="()";
 
 char Alphabet[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 // Why in string form it can handle one less characters?
@@ -533,6 +534,12 @@ char solveBit(char Bit0,char Bit1, int Operation){
         }else{
             Bit2='0';
         }
+    }else if(Operation==EQUALS){
+        if( Bit0==Bit1){
+            Bit2='1';
+        }else{
+            Bit2='0';
+        }
     }
 
     return Bit2;
@@ -607,6 +614,9 @@ str solveCell(str cell){
     str hex;
     int binCounter=0;
     char OperationChar;
+    bool noPS=true;
+    
+
 
     for (int i=0;i!=cell.length();i++){
         if (inCharList(cell[i],OpSome)==true){
@@ -689,6 +699,7 @@ bool solveProblem(str problem){
 
     str cell;
     str hexCell;
+    str hexCell0;
     char lp='(';
     char rp=')';
 
@@ -697,47 +708,78 @@ bool solveProblem(str problem){
 
     enter
     OUT("Cells:")
-    
-    for (int i=0;i!=problem.length();i++){
+        
+    bool ifPS = false;
+    bool breaker = false;
+    while (true){
+        for (int i=0;i!=problem.length();i++){
 
-        if (opened){
-            if (problem[i]==lp){
-                cellRange[0]=i;
+            if (opened){
+                if (problem[i]==lp){
+                    cellRange[0]=i;
 
-            }else if(problem[i]==rp){
+                }else if(problem[i]==rp){
 
-                cellRange[1]=i;
+                    cellRange[1]=i;
 
-                for (int c=cellRange[0]+1;c!=cellRange[1];c++){
-                    cell+=problem[c];
+                    for (int c=cellRange[0]+1;c!=cellRange[1];c++){
+                        cell+=problem[c];
+                    }
+
+                    enter
+                    indent out(problem) space out(" : ") enter
+                    indent indent out(cell) space out(" : ") enter
+                    indent indent indent 
+                    
+
+                    if (validCell(cell)){
+                        hexCell0 = solveCell(cell);
+                        hexCell = "#" + hexCell0;
+                        
+                    
+                        int k = 0;
+                        for (int j=cellRange[0];j!=cellRange[1]+1;j++){
+                            if (k<hexCell.length()){
+                                problem[j] = hexCell[k];  
+
+                            }else{
+                                problem[j] = ' ';
+                            
+                            }
+
+                            k++;
+                        }
+
+                        shrinkChar(' ',problem);
+                        out(hexCell) space out(hexToBin(hexCell0))
+                        enter  
+
+                        cell="";
+                        break;
+                        
+                    }
+                    else{
+                        OUT("Invalid cell structer")
+                        breaker = true;
+                        break;
+                    }
+                    enter
+                    space enter
+
+                    cell="";
+                    opened = false;
+
                 }
 
-                indent out(problem) indent
-                out(cell) indent
-                //printArray(cellRange,' ');
+            }else{
+                if (problem[i]==lp){
+                    cellRange[0]=i;
+                    opened = true;
 
-                if (validCell(cell)){
-                    hexCell = solveCell(cell);
-                    OUT(hexCell);
+                }else if(problem[i]==rp){
+
+
                 }
-                else{
-                    OUT("Invalid cell structer")
-                    break;
-                }
-
-                space enter
-
-                cell="";
-                opened = false;
-
-            }
-
-        }else{
-            if (problem[i]==lp){
-                cellRange[0]=i;
-                opened = true;
-
-            }else if(problem[i]==rp){
 
 
             }
@@ -745,7 +787,39 @@ bool solveProblem(str problem){
 
         }
 
+        if (breaker){
+            break;
+        }
+        ifPS=false;
 
+        for (int i=0;i!=problem.length();i++){
+            if (inCharList(problem[i],PS)){ 
+                ifPS = true;
+                
+            }
+
+        }
+        
+        if (ifPS==false){
+            enter 
+            if (validCell(problem)){
+                hexCell0 = solveCell(problem);
+                hexCell = "#" + hexCell0;
+                indent out(problem) space out(" : ") enter indent indent
+                out(hexCell) space 
+                
+                out(hexToBin(hexCell0))
+            }else{
+                indent out("Invalid Cell") space OUT(problem)
+
+            }
+        
+
+            
+
+
+            break;
+        }
     }
 
     return true;
