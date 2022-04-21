@@ -18,9 +18,9 @@ Operators table:
   
   & And
   
-  > Conclusion
+  '>' Conclusion
 
-  /% Bidirectional Conclusion
+  % Bidirectional Conclusion
   
   ~ Not
   
