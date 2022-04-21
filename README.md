@@ -1,30 +1,31 @@
-Appname: DM Problem Solver
+    appname: DM Problem Solver
 
-Version: 1.0 (Unoptimized)
+    Version: 1.0 (Unoptimized)
 
-Platform: Personal Computers
+    Platform: Personal Computers
 
-GUI: NO
+    GUI: NO
 
-User Friendly: NO
+    User Friendly: NO 
 
-This is my first C++ vast project , I worked on it for almost a week.
-This application solves Discrete Mathemathic's problems. ( like : (p>q)|r )
-The functionality of it is almost perfect but it's performance and memory managing rating is almost 0, 
-as I am only using std::string in the operation of finding the solution.
 
-Operators table:
-  | Or
-  
-  & And
-  
-  '>' Conclusion
+    This is my first C++ vast project , I worked on it for almost a week.
+    This application solves Discrete Mathemathic's problems. ( like : (p>q)|r )
+    The functionality of it is almost perfect but it's performance and memory managing rating is almost 0, 
+    as I am only using std::string in the operation of finding the solution.
 
-  % Bidirectional Conclusion
-  
-  ~ Not
-  
-  = Equals
+    Operators table:
+      | Or
+
+      & And
+
+      '>' Conclusion
+
+      % Bidirectional Conclusion
+
+      ~ Not
+
+      = Equals
   
 
 
