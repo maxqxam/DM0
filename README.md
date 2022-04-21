@@ -1,7 +1,11 @@
 Appname: DM Problem Solver
+
 Version: 1.0 (Unoptimized)
+
 Platform: Personal Computers
+
 GUI: NO
+
 User Friendly: NO
 
 This is my first C++ vast project , I worked on it for almost a week.
@@ -12,11 +16,17 @@ as I am only using std::string in the operation of finding the solution.
 
 Operators table:
   | Or
+  
   & And
+  
   > Conclusion
+
   % Bidirectional Conclusion
+  
   ~ Not
+  
   = Equals
+  
 
 
 Example:
