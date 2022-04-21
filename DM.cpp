@@ -286,6 +286,7 @@ int getVars(str Struct){
     str tempVar="";
     bool open=false;
     bool hexOpen=false;
+
     for (int i=0;i!=Struct.length();i++){
         if (Struct[i]=='#'){            
             hexOpen=true;
@@ -305,15 +306,15 @@ int getVars(str Struct){
 
                         varStore[result]=tempVar;
                         result++;
+                    }else if (i==Struct.length()-1){
+                        varStore[result]=tempVar;
+                        result++;
                     }
 
                     tempVar="";
                 }else{
                     tempVar+=Struct[i];
-                    if (i==Struct.length()-1){
-                        varStore[result]=tempVar;
-                        result++;
-                    }
+                    
                 }
 
             }else{
@@ -322,16 +323,17 @@ int getVars(str Struct){
                     open=true;
 
                     tempVar+=Struct[i];
+                    if (inStrList(tempVar,varStore,maxIndex+1)==0){
+                        if (i==Struct.length()-1 & i==0){
+                            varStore[result]=tempVar;
+                            result++;
 
-                    if (i==Struct.length()-1 & i==0){
-                        varStore[result]=tempVar;
-                        result++;
+                        }else
+                        if (i==Struct.length()-1){
+                            varStore[result]=tempVar;
+                            result++;
 
-                    }else
-                    if (i==Struct.length()-1){
-                        varStore[result]=tempVar;
-                        result++;
-
+                        }
                     }
                 }
             }
@@ -711,6 +713,7 @@ bool solveProblem(str problem){
         
     bool ifPS = false;
     bool breaker = false;
+    bool isOver = false;
     while (true){
         for (int i=0;i!=problem.length();i++){
 
@@ -803,12 +806,20 @@ bool solveProblem(str problem){
         if (ifPS==false){
             enter 
             if (validCell(problem)){
-                hexCell0 = solveCell(problem);
-                hexCell = "#" + hexCell0;
-                indent out(problem) space out(" : ") enter indent indent
-                out(hexCell) space 
-                
-                out(hexToBin(hexCell0))
+                isOver=true;
+                for (int i=0; i!=problem.length();i++){
+                    if (inCharList(problem[i],OpSome)) isOver=false;
+
+                }
+                if (!isOver){
+                    hexCell0 = solveCell(problem);
+                    hexCell = "#" + hexCell0;
+                    indent out(problem) space out(" : ") enter indent indent
+                    out(hexCell) space 
+                    
+                    out(hexToBin(hexCell0))
+                }
+
             }else{
                 indent out("Invalid Cell") space OUT(problem)
 
@@ -834,7 +845,6 @@ int main(){
     bool ifBin;
     str hex;
 
-    str X = "(p>q)%((p|r)|(q&r))=r";
     str finalResult;
 
     
@@ -842,7 +852,7 @@ int main(){
     while (true){
 
         enter
-        command = input("Input a parenthesis declaration : ");
+        command = input("Input a Discrete Mathemathics problem: ");
         shrinkChar(' ',command);
         enter enter enter
 
@@ -851,12 +861,12 @@ int main(){
         }
 
         if (validPDec(command)){
-            out(command) space out("Parenthesis Declaration is valid.") enter
+            //out(command) space out("Parenthesis Declaration is valid.") enter
 
 
-            out(command) space out("Has a")
+            //out(command) space out("Has a")
             if (validStruct(command)){
-                out(" valid structer.")
+                //out(" valid structer.")
                 enter
                 out("This statement contain's ")
                 varsCount=getVars(command);
@@ -882,7 +892,7 @@ int main(){
                 solveProblem(command);
 
             }else{
-                out("n invalid sructer.")
+                out("This problem has an invalid structer.")
 
             }
 
