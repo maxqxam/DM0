@@ -9,7 +9,6 @@ GUI: NO
 User Friendly: NO
 
 This is my first C++ vast project , I worked on it for almost a week.
-
 This application solves Discrete Mathemathic's problems. ( like : (p>q)|r )
 The functionality of it is almost perfect but it's performance and memory managing rating is almost 0, 
 as I am only using std::string in the operation of finding the solution.
@@ -21,7 +20,7 @@ Operators table:
   
   > Conclusion
 
-  % Bidirectional Conclusion
+  /% Bidirectional Conclusion
   
   ~ Not
   
